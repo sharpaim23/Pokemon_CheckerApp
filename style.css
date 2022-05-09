@@ -1,0 +1,38 @@
+/******************************************
+/* CSS
+/*******************************************/
+
+/* Box Model Hack */
+*{
+  box-sizing: border-box;
+}
+
+/******************************************
+/* LAYOUT
+/*******************************************/
+img{
+  display: block;
+  margin: 0 auto;
+}
+
+
+/******************************************
+/* ADDITIONAL STYLES
+/*******************************************/
+html {
+  font-size: 1.1rem;
+}
+
+body {
+  text-align: center;
+  font-family: 'Michroma';
+  margin-left: 10vw;
+  margin-right: 10vw;
+  background-image: url('thimo-pedersen-dip9IIwUK6w-unsplash.jpg');
+  background-size: cover;
+  text-shadow: 2px 2px 0px  rgb(250, 134, 134), -2px -2px 0px  rgb(250, 134, 134), 2px -2px 0px  rgb(250, 134, 134), -2px 2px 0px  rgb(250, 134, 134);
+}
+
+img {
+  height: 40vh;
+}
