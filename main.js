@@ -12,15 +12,19 @@ function getFetch(){
       .then(data => {
         console.log(data)
         //console.log(data.species.name,data.height,data.types,data.sprites.front_default)
-        const potentialPet = new Poke(data.species.name,data.height,data.weight,data.types,data.sprites.other["official-artwork"].front_default)
+        const potentialPet = new PokeInfo(data.species.name,data.height,data.weight,data.types,data.sprites.other["official-artwork"].front_default,data.location_area_encounters)
+        
         potentialPet.getTypes()
         potentialPet.isItHousepet()
+
         let decision = ''
         if (potentialPet.housepet) {
-          decision = `This Pokemon is small enough, light enough, and safe enough to be a good pet!`
+          decision = `This Pokemon is small enough, light enough, and safe enough to be a good pet! You can find ${potentialPet.name} in the following location(s):`
+          potentialPet.encounterInfo()
         } else {
           let reasonStr = potentialPet.reason.join(' and ')
           decision = `This Pokemon would not be a good pet because ${reasonStr}.`
+          document.getElementById('locations').innerText  = ''
         }
         document.querySelector('h2').innerText = decision
         document.querySelector('img').src = potentialPet.image
@@ -73,4 +77,38 @@ class Poke {
   heightToFeet (h) {
     return Math.round((h/3.048)*100)/100
   }
+}
+
+class PokeInfo extends Poke{
+  constructor(name,height,weight,types,image,location){
+    super(name,height,weight,types,image)
+    this.locationURL = location
+    this.locationList = []
+    this.locationString = ''
+  }
+
+  encounterInfo(){
+    fetch(this.locationURL)
+    .then(res => res.json())
+    .then(data => {
+      console.log(data);
+      for(const item of data){
+        this.locationList.push(item.location_area.name)
+      }
+      let target = document.getElementById('locations')
+      target.innerText = this.locationCleanup()
+    })
+    .catch(err => {
+      console.log(`error ${err}`);
+    });
+  }
+
+  locationCleanup(){
+    const words = this.locationList.slice(0,5).join(', ').replaceAll('-',' ').split(' ')
+    for(let i = 0; i > words.length; i++){
+      words[i] = words[i][0].toUpperCase() + words[i].slice(1)
+    }
+    return words.join(' ');
+  }
+
 }
